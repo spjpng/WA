@@ -1,5 +1,5 @@
 {
-  "scripts": {
-    "build": "mkdir -p dist && sed \"s|__SHEET_URL__|$SHEET_URL|g\" index.html > dist/index.html"
+  "engines": {
+    "node": "18.x"
   }
 }

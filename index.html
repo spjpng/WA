@@ -310,7 +310,6 @@ footer{padding:36px 28px;background:#080808;border-top:1px solid rgba(255,255,25
 </div>
 
 <script>
-const SHEET_URL='__SHEET_URL__';
 let cur=1;
 const titles=['Tell us about you','What do you need?','Budget & Timeline','Project Details'];
 
@@ -353,7 +352,7 @@ async function sub(){
   const payload={submitted:new Date().toLocaleString(),name:document.getElementById('fn').value,email:document.getElementById('fe').value,phone:document.getElementById('fp').value,company:document.getElementById('fc').value,services:svcs,budget:(document.querySelector('#bg .opt.sel')||{}).textContent||'',timeline:(document.querySelector('#tl .opt.sel')||{}).textContent||'',message:document.getElementById('fm').value,source:document.getElementById('fs').value};
   document.getElementById('btnNext').textContent='Sending...';
   document.getElementById('btnNext').disabled=true;
-  try{if(SHEET_URL!=='YOUR_APPS_SCRIPT_URL_HERE')await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});}catch(e){}
+  try{await fetch('/api/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});}catch(e){}
   document.getElementById('ffoot').style.display='none';
   document.getElementById('pb').style.width='100%';
   [1,2,3,4].forEach(i=>document.getElementById('s'+i).style.display='none');
