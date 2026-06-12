@@ -263,6 +263,7 @@ footer{padding:36px 28px;background:#080808;border-top:1px solid rgba(255,255,25
         <div class="fg"><label class="fl">Email Address</label><input class="fi" id="fe" type="email" placeholder="jane@company.com"></div>
         <div class="fg"><label class="fl">Company / Brand</label><input class="fi" id="fc" type="text" placeholder="Acme Inc."></div>
         <div class="fg"><label class="fl">Phone Number</label><input class="fi" id="fp" type="tel" placeholder="+1 (555) 000-0000"></div>
+        <div style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true"><label>Leave this empty<input type="text" id="fhp" tabindex="-1" autocomplete="off"></label></div>
       </div>
       <div id="s2" style="display:none">
         <p class="fl" style="margin-bottom:10px">What do you need?</p>
@@ -348,7 +349,17 @@ function pick(el,id){document.getElementById(id).querySelectorAll('.opt').forEac
 function go(n){[1,2,3,4].forEach(i=>document.getElementById('s'+i).style.display='none');document.getElementById('s'+n).style.display='';document.getElementById('ftitle').textContent=titles[n-1];document.getElementById('stepCtr').textContent='Step '+n+' of 4';document.getElementById('pb').style.width=(n/4*100)+'%';document.getElementById('btnBack').style.display=n>1?'':'none';document.getElementById('btnNext').textContent=n===4?'Submit ✓':'Next →';cur=n;}
 function nxt(){if(cur===1&&(!document.getElementById('fn').value.trim()||!document.getElementById('fe').value.trim())){alert('Please enter your name and email.');return;}if(cur===2&&!document.querySelector('#s2 .opt.sel')){alert('Please select at least one service.');return;}if(cur===3&&!document.querySelector('#bg .opt.sel')){alert('Please select a budget range.');return;}if(cur===3&&!document.querySelector('#tl .opt.sel')){alert('Please select a timeline.');return;}if(cur<4)go(cur+1);else sub();}
 function prev(){if(cur>1)go(cur-1);}
+function checkRateLimit(){
+  const KEY='_cf_sub';const LIMIT=3;const WINDOW=3600000;
+  const now=Date.now();
+  let record;try{record=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){record=null;}
+  if(!record||now-record.start>=WINDOW)record={start:now,count:0};
+  if(record.count>=LIMIT)return false;
+  record.count++;localStorage.setItem(KEY,JSON.stringify(record));return true;
+}
 async function sub(){
+  if(document.getElementById('fhp').value){return;}
+  if(!checkRateLimit()){alert('Too many submissions. Please try again later.');document.getElementById('btnNext').disabled=false;document.getElementById('btnNext').textContent='Submit ✓';return;}
   const svcs=[...document.querySelectorAll('#s2 .opt.sel')].map(o=>o.textContent).join(', ');
   const payload={submitted:new Date().toLocaleString(),name:document.getElementById('fn').value,email:document.getElementById('fe').value,phone:document.getElementById('fp').value,company:document.getElementById('fc').value,services:svcs,budget:(document.querySelector('#bg .opt.sel')||{}).textContent||'',timeline:(document.querySelector('#tl .opt.sel')||{}).textContent||'',message:document.getElementById('fm').value,source:document.getElementById('fs').value};
   document.getElementById('btnNext').textContent='Sending...';
