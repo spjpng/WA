@@ -3,6 +3,7 @@ backend:
   repo: spjpng/agency-os
   branch: main
   base_url: https://srtxrp.com
+  auth_endpoint: api/auth
 
 media_folder: dist/assets/uploads
 public_folder: /assets/uploads
