@@ -1,0 +1,83 @@
+backend:
+  name: github
+  repo: spjpng/agency-os
+  branch: main
+  base_url: https://srtxrp.com
+
+media_folder: dist/assets/uploads
+public_folder: /assets/uploads
+
+site_url: https://srtxrp.com
+display_url: https://srtxrp.com
+logo_url: https://srtxrp.com/favicon.ico
+
+collections:
+  - name: pages
+    label: Pages
+    label_singular: Page
+    files:
+      - name: homepage
+        label: Homepage
+        file: dist/index.html
+        fields:
+          - label: Hero Headline
+            name: hero_headline
+            widget: string
+          - label: Hero Subheading
+            name: hero_sub
+            widget: text
+          - label: Meta Title
+            name: meta_title
+            widget: string
+          - label: Meta Description
+            name: meta_description
+            widget: text
+
+  - name: city_pages
+    label: City Landing Pages
+    label_singular: City Page
+    folder: dist
+    filter:
+      field: city_page
+      value: true
+    extension: html
+    create: false
+    slug: "{{slug}}-digital-agency-delaware"
+    fields:
+      - label: City Name
+        name: city
+        widget: string
+      - label: Meta Title
+        name: meta_title
+        widget: string
+      - label: Meta Description
+        name: meta_description
+        widget: text
+      - label: Hero Headline
+        name: hero_headline
+        widget: string
+      - label: Hero Subheading
+        name: hero_sub
+        widget: text
+      - label: Local Section Headline
+        name: local_headline
+        widget: string
+      - label: Local Section Body
+        name: local_body
+        widget: text
+
+  - name: settings
+    label: Site Settings
+    files:
+      - name: general
+        label: General Settings
+        file: dist/index.html
+        fields:
+          - label: Agency Name
+            name: agency_name
+            widget: string
+            default: srtxrp Agency
+          - label: Contact Form Endpoint
+            name: sheet_url
+            widget: string
+            hint: Google Apps Script URL for form submissions
